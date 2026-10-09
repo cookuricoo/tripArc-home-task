@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+apps/*
+!apps/.gitkeep
+artifacts/
+.appium/
+.DS_Store
+.tools/
+tests/diagnostics/.failure-*.spec.ts

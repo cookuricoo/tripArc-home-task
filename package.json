@@ -1,0 +1,49 @@
+{
+  "name": "triparc-mobile-assessment",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Native Android and iOS automation with Appium, WebdriverIO, TypeScript and Page Objects",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "scripts": {
+    "check": "npm run typecheck && npm run lint && npm run test:unit",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test:unit": "node --import tsx --test tests/unit/*.test.ts",
+    "test:android": "wdio run config/wdio.local.ts",
+    "test:parallel": "wdio run config/wdio.parallel.ts",
+    "test:cloud:android": "wdio run config/wdio.cloud-android.ts",
+    "test:cloud:ios": "wdio run config/wdio.cloud-ios.ts",
+    "apps:download": "node --import tsx scripts/download-apps.ts",
+    "cloud:upload": "node --import tsx scripts/upload-app.ts",
+    "doctor": "node --import tsx scripts/doctor.ts",
+    "report": "allure generate artifacts/allure-results --clean -o artifacts/allure-report",
+    "report:open": "allure open artifacts/allure-report",
+    "verify:stability": "node --import tsx scripts/stability.ts",
+    "verify:artifacts": "node --import tsx scripts/verify-artifacts.ts",
+    "appium:setup": "node --import tsx scripts/register-driver.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@types/node": "24.19.1",
+    "@wdio/allure-reporter": "10.0.1",
+    "@wdio/appium-service": "10.0.2",
+    "@wdio/cli": "10.0.2",
+    "@wdio/globals": "10.0.2",
+    "@wdio/junit-reporter": "10.0.1",
+    "@wdio/local-runner": "10.0.2",
+    "@wdio/mocha-framework": "10.0.1",
+    "@wdio/spec-reporter": "10.0.1",
+    "allure-commandline": "2.46.1",
+    "appium": "3.8.0",
+    "appium-uiautomator2-driver": "8.7.0",
+    "dotenv": "17.4.2",
+    "eslint": "9.39.5",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "webdriverio": "10.0.2"
+  }
+}

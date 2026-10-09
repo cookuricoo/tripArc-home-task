@@ -1,0 +1,32 @@
+import { browser } from '@wdio/globals';
+import { cart } from '../locators/screens.js';
+import { MoneyHelper } from '../helpers/MoneyHelper.js';
+import type { CartSnapshot } from '../types/domain.js';
+import { BasePage } from './BasePage.js';
+export class CartPage extends BasePage {
+  async waitUntilReady(): Promise<void> { await this.visible(cart.ready); }
+  async readItem(): Promise<CartSnapshot> {
+    await this.waitUntilReady();
+    return {
+      name: await this.text(cart.name), quantity: Number(await this.text(cart.quantity)),
+      unitPriceCents: MoneyHelper.toCents(await this.text(cart.price)),
+      subtotalCents: MoneyHelper.toCents(await this.text(cart.subtotal)),
+    };
+  }
+  async changeQuantity(target: number): Promise<void> {
+    if (!Number.isInteger(target) || target < 1 || target > 10) throw new Error('Quantity must be 1–10');
+    let current = (await this.readItem()).quantity;
+    while (current !== target) {
+      const next = current + (target > current ? 1 : -1);
+      await this.click(target > current ? cart.increase : cart.decrease);
+      await browser.waitUntil(async () => Number(await this.text(cart.quantity)) === next,
+        { timeout: 10_000, timeoutMsg: `Cart quantity did not become ${next}` });
+      current = next;
+    }
+  }
+  async waitForSubtotal(cents: number): Promise<void> {
+    await browser.waitUntil(async () => MoneyHelper.toCents(await this.text(cart.subtotal)) === cents,
+      { timeout: 10_000, timeoutMsg: `Cart subtotal did not become ${cents} cents` });
+  }
+  async proceedToCheckout(): Promise<void> { await this.click(cart.checkout); }
+}
